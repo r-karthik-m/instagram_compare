@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <title>Instagram Follower Comparison</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scrollbar for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* gray-800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563; /* gray-600 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* gray-500 */
+        }
+        
+        /* Basic styles */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Hide the message box by default */
+        #messageBox {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+    <!-- Configure Tailwind for dark mode -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // 'media' or 'class'
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen p-4 md:p-8 transition-colors duration-300">
+
+    <div class="max-w-6xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="p-6 md:p-8 border-b border-gray-200 dark:border-gray-700">
+            <h1 class="text-3xl md:text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
+                Instagram Follower Comparison
+            </h1>
+            <p class="text-center text-gray-600 dark:text-gray-400 mt-2">
+                Find out who isn't following you back.
+            </p>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="p-6 md:p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Following File Input -->
+                <div>
+                    <label for="followingFile" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        1. Upload <code class="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded">following.json</code>
+                    </label>
+                    <input class="block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 dark:file:bg-purple-900 file:text-purple-700 dark:file:text-purple-300 hover:file:bg-purple-100 dark:hover:file:bg-purple-800" id="followingFile" type="file" accept=".json">
+                </div>
+                
+                <!-- Followers File Input -->
+                <div>
+                    <label for="followersFile" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        2. Upload <code class="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded">followers.json</code>
+                    </label>
+                    <input class="block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 dark:file:bg-pink-900 file:text-pink-700 dark:file:text-pink-300 hover:file:bg-pink-100 dark:hover:file:bg-pink-800" id="followersFile" type="file" accept=".json">
+                </div>
+            </div>
+
+            <!-- Compare Button -->
+            <button id="compareButton" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:from-purple-600 hover:to-pink-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                Compare Lists
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="p-6 md:p-8 border-t border-gray-200 dark:border-gray-700 hidden">
+            <!-- Total Counts -->
+            <div id="totalCounts" class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner text-center">
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Following</p>
+                    <p id="totalFollowingCount" class="text-3xl font-bold text-purple-500 dark:text-purple-400">0</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner text-center">
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Followers</p>
+                    <p id="totalFollowersCount" class="text-3xl font-bold text-pink-500 dark:text-pink-400">0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Not Following You Back -->
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner">
+                    <h2 class="text-xl font-semibold text-red-600 dark:text-red-400 mb-3">
+                        Not Following You Back
+                    </h2>
+                    <p id="notFollowingCount" class="text-sm text-gray-500 dark:text-gray-400 mb-3">Total: 0</p>
+                    <ul id="notFollowingList" class="max-h-96 overflow-y-auto space-y-2 pr-2">
+                        <!-- JS will populate this -->
+                    </ul>
+                </div>
+
+                <!-- You Don't Follow Back -->
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner">
+                    <h2 class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-3">
+                        You Don't Follow Back
+                    </h2>
+                    <p id="notFollowedCount" class="text-sm text-gray-500 dark:text-gray-400 mb-3">Total: 0</p>
+                    <ul id="notFollowedList" class="max-h-96 overflow-y-auto space-y-2 pr-2">
+                        <!-- JS will populate this -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Box for Errors -->
+    <div id="messageBox" class="fixed top-5 left-1/2 -translate-x-1/2 max-w-lg w-11/12 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg z-50">
+        <strong class="font-bold">Error!</strong>
+        <span id="messageText" class="block sm:inline">Something went wrong.</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="hideMessage()">
+            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+        </span>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const followingFileInput = document.getElementById('followingFile');
+        const followersFileInput = document.getElementById('followersFile');
+        const compareButton = document.getElementById('compareButton');
+        const resultsSection = document.getElementById('results');
+        
+        const notFollowingList = document.getElementById('notFollowingList');
+        const notFollowingCount = document.getElementById('notFollowingCount');
+        const notFollowedList = document.getElementById('notFollowedList');
+        const notFollowedCount = document.getElementById('notFollowedCount');
+        
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+
+        // --- Message Box Functions ---
+        function showMessage(message) {
+            messageText.textContent = message;
+            messageBox.style.display = 'block';
+            setTimeout(() => { messageBox.style.opacity = '1'; }, 10); // Fade in
+        }
+
+        function hideMessage() {
+            messageBox.style.opacity = '0';
+            setTimeout(() => { messageBox.style.display = 'none'; }, 500); // Fade out
+        }
+
+        // --- File Reading Function ---
+        function readFile(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) {
+                    reject(new Error('No file selected.'));
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const json = JSON.parse(event.target.result);
+                        resolve(json);
+                    } catch (e) {
+                        reject(new Error(`Failed to parse ${file.name}: ${e.message}`));
+                    }
+                };
+                reader.onerror = (event) => {
+                    reject(new Error(`Error reading ${file.name}: ${event.target.error}`));
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        // --- Main Comparison Logic ---
+        async function compareLists() {
+            // 1. Reset UI and show loading state
+            compareButton.disabled = true;
+            compareButton.textContent = 'Processing...';
+            resultsSection.classList.add('hidden');
+            notFollowingList.innerHTML = '';
+            notFollowedList.innerHTML = '';
+            
+            // Reset total counts
+            document.getElementById('totalFollowingCount').textContent = '0';
+            document.getElementById('totalFollowersCount').textContent = '0';
+
+            hideMessage();
+
+            try {
+                // 2. Read and parse both files
+                const [followingJson, followersJson] = await Promise.all([
+                    readFile(followingFileInput.files[0]),
+                    readFile(followersFileInput.files[0])
+                ]);
+
+                // 3. Extract usernames into Sets for efficient lookup
+                const followingSet = new Set();
+                const followersSet = new Set();
+
+                // Extract from following.json
+                // Format: { "relationships_following": [ { "title": "username", ... }, ... ] }
+                if (followingJson && followingJson.relationships_following) {
+                    followingJson.relationships_following.forEach(item => {
+                        if (item.title) {
+                            followingSet.add(item.title);
+                        }
+                    });
+                } else {
+                    throw new Error('Invalid `following.json` format. Expected "relationships_following" key.');
+                }
+
+                // Extract from followers.json
+                // Format: [ { "string_list_data": [ { "value": "username", ... } ] }, ... ]
+                if (Array.isArray(followersJson)) {
+                    followersJson.forEach(item => {
+                        if (item.string_list_data && item.string_list_data[0] && item.string_list_data[0].value) {
+                            followersSet.add(item.string_list_data[0].value);
+                        }
+                    });
+                } else {
+                    throw new Error('Invalid `followers.json` format. Expected an array.');
+                }
+
+                // Store total counts
+                const totalFollowing = followingSet.size;
+                const totalFollowers = followersSet.size;
+
+                // 4. Compare the sets
+                const notFollowingBack = [];
+                followingSet.forEach(username => {
+                    if (!followersSet.has(username)) {
+                        notFollowingBack.push(username);
+                    }
+                });
+
+                const notFollowedBack = [];
+                followersSet.forEach(username => {
+                    if (!followingSet.has(username)) {
+                        notFollowedBack.push(username);
+                    }
+                });
+
+                // 5. Display the results
+                displayResults(notFollowingBack, notFollowedBack, totalFollowing, totalFollowers);
+            
+            } catch (error) {
+                // Show error message if something fails
+                showMessage(error.message);
+            } finally {
+                // 6. Re-enable button
+                compareButton.disabled = false;
+                compareButton.textContent = 'Compare Lists';
+            }
+        }
+        
+        // --- Display Results Function ---
+        function displayResults(notFollowingBack, notFollowedBack, totalFollowing, totalFollowers) {
+            // Get total count elements
+            const totalFollowingCountEl = document.getElementById('totalFollowingCount');
+            const totalFollowersCountEl = document.getElementById('totalFollowersCount');
+
+            // Populate total counts
+            totalFollowingCountEl.textContent = totalFollowing.toLocaleString();
+            totalFollowersCountEl.textContent = totalFollowers.toLocaleString();
+
+            // Sort lists alphabetically
+            notFollowingBack.sort();
+            notFollowedBack.sort();
+
+            // Populate "Not Following Back" list
+            notFollowingCount.textContent = `Total: ${notFollowingBack.length}`;
+            notFollowingBack.forEach(username => {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm';
+                li.innerHTML = `
+                    <span class="font-medium">${username}</span>
+                    <a href="https://www.instagram.com/${username}/" target="_blank" rel="noopener noreferrer" class="text-sm text-purple-500 dark:text-purple-400 hover:underline">
+                        Visit Profile
+                    </a>
+                `;
+                notFollowingList.appendChild(li);
+            });
+
+            // Populate "You Don't Follow Back" list
+            notFollowedCount.textContent = `Total: ${notFollowedBack.length}`;
+            notFollowedBack.forEach(username => {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm';
+                li.innerHTML = `
+                    <span class="font-medium">${username}</span>
+                    <a href="https://www.instagram.com/${username}/" target="_blank" rel="noopener noreferrer" class="text-sm text-purple-500 dark:text-purple-400 hover:underline">
+                        Visit Profile
+                    </a>
+                `;
+                notFollowedList.appendChild(li);
+            });
+
+            // Show the results section
+            resultsSection.classList.remove('hidden');
+        }
+
+        // Add event listener to the button
+        compareButton.addEventListener('click', compareLists);
+
+    </script>
+
+</body>
+</html>
+
