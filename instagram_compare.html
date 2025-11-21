@@ -1,45 +1,180 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <title>Instagram Follower Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Follower Comparison - Advanced Analytics</title>
+    <meta name="description"
+        content="Analyze your Instagram followers and following lists with advanced statistics and insights">
+
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- Use Inter font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         /* Custom scrollbar for dark mode */
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #1f2937; /* gray-800 */
+            background: #1f2937;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #4b5563; /* gray-600 */
+            background: #4b5563;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280; /* gray-500 */
+            background: #6b7280;
         }
-        
-        /* Basic styles */
+
         body {
             font-family: 'Inter', sans-serif;
         }
 
-        /* Hide the message box by default */
-        #messageBox {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+        /* Animated gradient background */
+        .animated-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Pulse animation for loading */
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Drag and drop styling */
+        .drag-over {
+            border-color: #8B5CF6 !important;
+            background-color: rgba(139, 92, 246, 0.1) !important;
+        }
+
+        /* Smooth transitions */
+        * {
+            transition-property: background-color, border-color, color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+
+        /* Hide elements but keep accessible */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Custom checkbox */
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #8B5CF6;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #8B5CF6;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
+
     <!-- Configure Tailwind for dark mode -->
     <script>
         tailwind.config = {
-            darkMode: 'class', // 'media' or 'class'
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -50,128 +185,406 @@
         }
     </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen p-4 md:p-8 transition-colors duration-300">
 
-    <div class="max-w-6xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
-        <!-- Header -->
-        <div class="p-6 md:p-8 border-b border-gray-200 dark:border-gray-700">
-            <h1 class="text-3xl md:text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
-                Instagram Follower Comparison
-            </h1>
-            <p class="text-center text-gray-600 dark:text-gray-400 mt-2">
-                Find out who isn't following you back.
-            </p>
+<body
+    class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header with Theme Toggle -->
+        <div class="glass rounded-2xl shadow-2xl overflow-hidden mb-6 fade-in">
+            <div class="p-6 md:p-8 relative">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle"
+                    class="absolute top-6 right-6 p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                    aria-label="Toggle theme">
+                    <svg id="sunIcon" class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="moonIcon" class="w-6 h-6 block dark:hidden text-gray-700" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+
+                <h1
+                    class="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500">
+                    📊 Instagram Analytics Pro
+                </h1>
+                <p class="text-center text-gray-600 dark:text-gray-400 mt-3 text-lg">
+                    Advanced follower comparison and insights
+                </p>
+            </div>
         </div>
 
-        <!-- File Upload Section -->
-        <div class="p-6 md:p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <!-- Following File Input -->
-                <div>
-                    <label for="followingFile" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                        1. Upload <code class="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded">following.json</code>
-                    </label>
-                    <input class="block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 dark:file:bg-purple-900 file:text-purple-700 dark:file:text-purple-300 hover:file:bg-purple-100 dark:hover:file:bg-purple-800" id="followingFile" type="file" accept=".json">
-                </div>
-                
-                <!-- Followers File Input -->
-                <div>
-                    <label for="followersFile" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                        2. Upload <code class="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded">followers.json</code>
-                    </label>
-                    <input class="block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 dark:file:bg-pink-900 file:text-pink-700 dark:file:text-pink-300 hover:file:bg-pink-100 dark:hover:file:bg-pink-800" id="followersFile" type="file" accept=".json">
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Upload Section -->
+            <div class="lg:col-span-1">
+                <div class="glass rounded-2xl shadow-2xl overflow-hidden fade-in p-6">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <span class="text-2xl">📁</span>
+                        Upload Data
+                    </h2>
+
+                    <!-- Following File Input -->
+                    <div class="mb-6">
+                        <label for="followingFile"
+                            class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            1. Upload <code
+                                class="bg-purple-100 dark:bg-purple-900 px-2 py-1 rounded text-purple-700 dark:text-purple-300">following.json</code>
+                        </label>
+                        <div id="followingDropZone"
+                            class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-purple-500 dark:hover:border-purple-400 transition-all">
+                            <input id="followingFile" type="file" accept=".json" class="hidden">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Click or drag file here</p>
+                            <p id="followingFileName" class="text-xs text-green-600 dark:text-green-400 mt-2 hidden">
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Followers File Input -->
+                    <div class="mb-6">
+                        <label for="followersFile"
+                            class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            2. Upload <code
+                                class="bg-pink-100 dark:bg-pink-900 px-2 py-1 rounded text-pink-700 dark:text-pink-300">followers.json</code>
+                        </label>
+                        <div id="followersDropZone"
+                            class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-pink-500 dark:hover:border-pink-400 transition-all">
+                            <input id="followersFile" type="file" accept=".json" class="hidden">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Click or drag file here</p>
+                            <p id="followersFileName" class="text-xs text-green-600 dark:text-green-400 mt-2 hidden">
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Compare Button -->
+                    <button id="compareButton"
+                        class="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 transform focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                        <span id="compareButtonText">🚀 Analyze Now</span>
+                    </button>
+
+                    <!-- Clear Data Button -->
+                    <button id="clearDataButton"
+                        class="w-full mt-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-3 px-6 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-all hidden">
+                        🗑️ Clear Saved Data
+                    </button>
                 </div>
             </div>
 
-            <!-- Compare Button -->
-            <button id="compareButton" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:from-purple-600 hover:to-pink-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                Compare Lists
-            </button>
-        </div>
-
-        <!-- Results Section -->
-        <div id="results" class="p-6 md:p-8 border-t border-gray-200 dark:border-gray-700 hidden">
-            <!-- Total Counts -->
-            <div id="totalCounts" class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner text-center">
-                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Following</p>
-                    <p id="totalFollowingCount" class="text-3xl font-bold text-purple-500 dark:text-purple-400">0</p>
-                </div>
-                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner text-center">
-                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Followers</p>
-                    <p id="totalFollowersCount" class="text-3xl font-bold text-pink-500 dark:text-pink-400">0</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Not Following You Back -->
-                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner">
-                    <h2 class="text-xl font-semibold text-red-600 dark:text-red-400 mb-3">
-                        Not Following You Back
+            <!-- Right Column: Results -->
+            <div class="lg:col-span-2">
+                <!-- Statistics Dashboard -->
+                <div id="statsSection" class="glass rounded-2xl shadow-2xl overflow-hidden mb-6 p-6 hidden fade-in">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <span class="text-2xl">📈</span>
+                        Statistics Dashboard
                     </h2>
-                    <p id="notFollowingCount" class="text-sm text-gray-500 dark:text-gray-400 mb-3">Total: 0</p>
-                    <ul id="notFollowingList" class="max-h-96 overflow-y-auto space-y-2 pr-2">
-                        <!-- JS will populate this -->
-                    </ul>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <!-- Total Following -->
+                        <div
+                            class="bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl p-4 text-white shadow-lg">
+                            <p class="text-sm opacity-90 mb-1">Following</p>
+                            <p id="totalFollowingCount" class="text-3xl font-bold">0</p>
+                        </div>
+
+                        <!-- Total Followers -->
+                        <div class="bg-gradient-to-br from-pink-500 to-pink-700 rounded-xl p-4 text-white shadow-lg">
+                            <p class="text-sm opacity-90 mb-1">Followers</p>
+                            <p id="totalFollowersCount" class="text-3xl font-bold">0</p>
+                        </div>
+
+                        <!-- Mutual Followers -->
+                        <div class="bg-gradient-to-br from-green-500 to-green-700 rounded-xl p-4 text-white shadow-lg">
+                            <p class="text-sm opacity-90 mb-1">Mutual</p>
+                            <p id="mutualCount" class="text-3xl font-bold">0</p>
+                        </div>
+
+                        <!-- Follow Ratio -->
+                        <div
+                            class="bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl p-4 text-white shadow-lg">
+                            <p class="text-sm opacity-90 mb-1">Ratio</p>
+                            <p id="followRatio" class="text-3xl font-bold">0%</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bars -->
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-700 dark:text-gray-300">Engagement Rate</span>
+                                <span id="engagementRate" class="font-semibold">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-3">
+                                <div id="engagementBar"
+                                    class="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-1000"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-700 dark:text-gray-300">Mutual Follow Rate</span>
+                                <span id="mutualRate" class="font-semibold">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-3">
+                                <div id="mutualBar"
+                                    class="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full transition-all duration-1000"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Buttons -->
+                    <div class="mt-6 flex flex-wrap gap-3">
+                        <button id="exportCSV"
+                            class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all">
+                            📄 Export CSV
+                        </button>
+                        <button id="exportJSON"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all">
+                            📋 Export JSON
+                        </button>
+                        <button id="exportTXT"
+                            class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all">
+                            📝 Export TXT
+                        </button>
+                    </div>
+
+                    <p id="lastUpdated" class="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center"></p>
                 </div>
 
-                <!-- You Don't Follow Back -->
-                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner">
-                    <h2 class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-3">
-                        You Don't Follow Back
-                    </h2>
-                    <p id="notFollowedCount" class="text-sm text-gray-500 dark:text-gray-400 mb-3">Total: 0</p>
-                    <ul id="notFollowedList" class="max-h-96 overflow-y-auto space-y-2 pr-2">
-                        <!-- JS will populate this -->
-                    </ul>
+                <!-- Search and Filter -->
+                <div id="searchSection" class="glass rounded-2xl shadow-2xl overflow-hidden mb-6 p-6 hidden fade-in">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <input type="text" id="searchInput" placeholder="🔍 Search usernames..."
+                                class="w-full px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-purple-500 focus:outline-none text-gray-900 dark:text-gray-100">
+                        </div>
+                        <select id="sortSelect"
+                            class="px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-purple-500 focus:outline-none text-gray-900 dark:text-gray-100">
+                            <option value="alpha">Sort: A-Z</option>
+                            <option value="reverse">Sort: Z-A</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Results Tabs -->
+                <div id="resultsSection" class="glass rounded-2xl shadow-2xl overflow-hidden hidden fade-in">
+                    <!-- Tab Headers -->
+                    <div class="flex border-b border-gray-300 dark:border-gray-700">
+                        <button id="tab1"
+                            class="flex-1 py-4 px-6 font-semibold text-center tab-button bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 border-b-2 border-purple-600"
+                            onclick="switchTab(1)">
+                            <span class="text-lg">👎</span> Not Following Back
+                            <span id="notFollowingBadge"
+                                class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">0</span>
+                        </button>
+                        <button id="tab2" class="flex-1 py-4 px-6 font-semibold text-center tab-button"
+                            onclick="switchTab(2)">
+                            <span class="text-lg">🤷</span> You Don't Follow
+                            <span id="notFollowedBadge"
+                                class="ml-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">0</span>
+                        </button>
+                        <button id="tab3" class="flex-1 py-4 px-6 font-semibold text-center tab-button"
+                            onclick="switchTab(3)">
+                            <span class="text-lg">🤝</span> Mutual
+                            <span id="mutualBadge"
+                                class="ml-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="p-6">
+                        <!-- Tab 1: Not Following Back -->
+                        <div id="tabContent1" class="tab-content">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold text-red-600 dark:text-red-400">People Not Following You
+                                    Back</h3>
+                                <button onclick="copyList(1)"
+                                    class="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">
+                                    📋 Copy All
+                                </button>
+                            </div>
+                            <div id="notFollowingList" class="space-y-2 max-h-96 overflow-y-auto pr-2">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: You Don't Follow Back -->
+                        <div id="tabContent2" class="tab-content hidden">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold text-blue-600 dark:text-blue-400">People You Don't Follow
+                                    Back</h3>
+                                <button onclick="copyList(2)"
+                                    class="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">
+                                    📋 Copy All
+                                </button>
+                            </div>
+                            <div id="notFollowedList" class="space-y-2 max-h-96 overflow-y-auto pr-2">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Mutual Followers -->
+                        <div id="tabContent3" class="tab-content hidden">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold text-green-600 dark:text-green-400">Mutual Followers</h3>
+                                <button onclick="copyList(3)"
+                                    class="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">
+                                    📋 Copy All
+                                </button>
+                            </div>
+                            <div id="mutualList" class="space-y-2 max-h-96 overflow-y-auto pr-2">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Message Box for Errors -->
-    <div id="messageBox" class="fixed top-5 left-1/2 -translate-x-1/2 max-w-lg w-11/12 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg z-50">
-        <strong class="font-bold">Error!</strong>
-        <span id="messageText" class="block sm:inline">Something went wrong.</span>
-        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="hideMessage()">
-            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
-        </span>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast glass rounded-lg shadow-2xl p-4 max-w-sm">
+        <div class="flex items-center gap-3">
+            <span id="toastIcon" class="text-2xl">✅</span>
+            <span id="toastMessage" class="font-semibold"></span>
+        </div>
     </div>
 
     <script>
-        // Get DOM elements
+        // ===== Global Variables =====
+        let currentData = {
+            following: new Set(),
+            followers: new Set(),
+            notFollowingBack: [],
+            youDontFollowBack: [],
+            mutualFollowers: [],
+            timestamp: null
+        };
+
+        let currentTab = 1;
+        let searchQuery = '';
+        let sortOrder = 'alpha';
+
+        // ===== DOM Elements =====
         const followingFileInput = document.getElementById('followingFile');
         const followersFileInput = document.getElementById('followersFile');
+        const followingDropZone = document.getElementById('followingDropZone');
+        const followersDropZone = document.getElementById('followersDropZone');
         const compareButton = document.getElementById('compareButton');
-        const resultsSection = document.getElementById('results');
-        
-        const notFollowingList = document.getElementById('notFollowingList');
-        const notFollowingCount = document.getElementById('notFollowingCount');
-        const notFollowedList = document.getElementById('notFollowedList');
-        const notFollowedCount = document.getElementById('notFollowedCount');
-        
-        const messageBox = document.getElementById('messageBox');
-        const messageText = document.getElementById('messageText');
+        const themeToggle = document.getElementById('themeToggle');
+        const clearDataButton = document.getElementById('clearDataButton');
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
 
-        // --- Message Box Functions ---
-        function showMessage(message) {
-            messageText.textContent = message;
-            messageBox.style.display = 'block';
-            setTimeout(() => { messageBox.style.opacity = '1'; }, 10); // Fade in
+        // ===== Initialization =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            loadSavedData();
+            setupEventListeners();
+        });
+
+        // ===== Theme Functions =====
+        function initTheme() {
+            const savedTheme = localStorage.getItem('ig_compare_theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         }
 
-        function hideMessage() {
-            messageBox.style.opacity = '0';
-            setTimeout(() => { messageBox.style.display = 'none'; }, 500); // Fade out
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('ig_compare_theme', isDark ? 'dark' : 'light');
+            showToast(isDark ? '🌙 Dark mode enabled' : '☀️ Light mode enabled', 'success');
         }
 
-        // --- File Reading Function ---
+        // ===== Event Listeners Setup =====
+        function setupEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // File inputs
+            setupFileDropZone(followingDropZone, followingFileInput, 'followingFileName');
+            setupFileDropZone(followersDropZone, followersFileInput, 'followersFileName');
+
+            // Compare button
+            compareButton.addEventListener('click', compareLists);
+
+            // Clear data button
+            clearDataButton.addEventListener('click', clearSavedData);
+
+            // Search and sort
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderCurrentTab();
+            });
+
+            sortSelect.addEventListener('change', (e) => {
+                sortOrder = e.target.value;
+                renderCurrentTab();
+            });
+
+            // Export buttons
+            document.getElementById('exportCSV').addEventListener('click', () => exportData('csv'));
+            document.getElementById('exportJSON').addEventListener('click', () => exportData('json'));
+            document.getElementById('exportTXT').addEventListener('click', () => exportData('txt'));
+        }
+
+        // ===== File Drop Zone Setup =====
+        function setupFileDropZone(dropZone, fileInput, fileNameId) {
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drag-over');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    updateFileName(files[0].name, fileNameId);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    updateFileName(e.target.files[0].name, fileNameId);
+                }
+            });
+        }
+
+        function updateFileName(name, elementId) {
+            const element = document.getElementById(elementId);
+            element.textContent = `✅ ${name}`;
+            element.classList.remove('hidden');
+        }
+
+        // ===== File Reading =====
         function readFile(file) {
             return new Promise((resolve, reject) => {
                 if (!file) {
                     reject(new Error('No file selected.'));
                     return;
                 }
+
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     try {
@@ -181,146 +594,385 @@
                         reject(new Error(`Failed to parse ${file.name}: ${e.message}`));
                     }
                 };
-                reader.onerror = (event) => {
-                    reject(new Error(`Error reading ${file.name}: ${event.target.error}`));
+                reader.onerror = () => {
+                    reject(new Error(`Error reading ${file.name}`));
                 };
                 reader.readAsText(file);
             });
         }
 
-        // --- Main Comparison Logic ---
+        // ===== Main Comparison Logic =====
         async function compareLists() {
-            // 1. Reset UI and show loading state
             compareButton.disabled = true;
-            compareButton.textContent = 'Processing...';
-            resultsSection.classList.add('hidden');
-            notFollowingList.innerHTML = '';
-            notFollowedList.innerHTML = '';
-            
-            // Reset total counts
-            document.getElementById('totalFollowingCount').textContent = '0';
-            document.getElementById('totalFollowersCount').textContent = '0';
+            document.getElementById('compareButtonText').innerHTML = '<span class="pulse">⏳ Processing...</span>';
 
-            hideMessage();
+            hideAllSections();
 
             try {
-                // 2. Read and parse both files
+                // Read both files
                 const [followingJson, followersJson] = await Promise.all([
                     readFile(followingFileInput.files[0]),
                     readFile(followersFileInput.files[0])
                 ]);
 
-                // 3. Extract usernames into Sets for efficient lookup
+                // Extract usernames
                 const followingSet = new Set();
                 const followersSet = new Set();
 
-                // Extract from following.json
-                // Format: { "relationships_following": [ { "title": "username", ... }, ... ] }
-                if (followingJson && followingJson.relationships_following) {
+                // Parse following.json
+                if (followingJson?.relationships_following) {
                     followingJson.relationships_following.forEach(item => {
-                        if (item.title) {
-                            followingSet.add(item.title);
-                        }
+                        if (item.title) followingSet.add(item.title);
                     });
                 } else {
-                    throw new Error('Invalid `following.json` format. Expected "relationships_following" key.');
+                    throw new Error('Invalid following.json format. Expected "relationships_following" key.');
                 }
 
-                // Extract from followers.json
-                // Format: [ { "string_list_data": [ { "value": "username", ... } ] }, ... ]
+                // Parse followers.json
                 if (Array.isArray(followersJson)) {
                     followersJson.forEach(item => {
-                        if (item.string_list_data && item.string_list_data[0] && item.string_list_data[0].value) {
+                        if (item.string_list_data?.[0]?.value) {
                             followersSet.add(item.string_list_data[0].value);
                         }
                     });
                 } else {
-                    throw new Error('Invalid `followers.json` format. Expected an array.');
+                    throw new Error('Invalid followers.json format. Expected an array.');
                 }
 
-                // Store total counts
-                const totalFollowing = followingSet.size;
-                const totalFollowers = followersSet.size;
-
-                // 4. Compare the sets
+                // Compare sets
                 const notFollowingBack = [];
+                const youDontFollowBack = [];
+                const mutualFollowers = [];
+
                 followingSet.forEach(username => {
-                    if (!followersSet.has(username)) {
+                    if (followersSet.has(username)) {
+                        mutualFollowers.push(username);
+                    } else {
                         notFollowingBack.push(username);
                     }
                 });
 
-                const notFollowedBack = [];
                 followersSet.forEach(username => {
                     if (!followingSet.has(username)) {
-                        notFollowedBack.push(username);
+                        youDontFollowBack.push(username);
                     }
                 });
 
-                // 5. Display the results
-                displayResults(notFollowingBack, notFollowedBack, totalFollowing, totalFollowers);
-            
+                // Store data
+                currentData = {
+                    following: followingSet,
+                    followers: followersSet,
+                    notFollowingBack,
+                    youDontFollowBack,
+                    mutualFollowers,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save to localStorage
+                saveData();
+
+                // Display results
+                displayResults();
+
+                showToast('✅ Analysis complete!', 'success');
+
             } catch (error) {
-                // Show error message if something fails
-                showMessage(error.message);
+                showToast('❌ ' + error.message, 'error');
             } finally {
-                // 6. Re-enable button
                 compareButton.disabled = false;
-                compareButton.textContent = 'Compare Lists';
+                document.getElementById('compareButtonText').textContent = '🚀 Analyze Now';
             }
         }
-        
-        // --- Display Results Function ---
-        function displayResults(notFollowingBack, notFollowedBack, totalFollowing, totalFollowers) {
-            // Get total count elements
-            const totalFollowingCountEl = document.getElementById('totalFollowingCount');
-            const totalFollowersCountEl = document.getElementById('totalFollowersCount');
 
-            // Populate total counts
-            totalFollowingCountEl.textContent = totalFollowing.toLocaleString();
-            totalFollowersCountEl.textContent = totalFollowers.toLocaleString();
+        // ===== Display Results =====
+        function displayResults() {
+            const { following, followers, notFollowingBack, youDontFollowBack, mutualFollowers } = currentData;
 
-            // Sort lists alphabetically
-            notFollowingBack.sort();
-            notFollowedBack.sort();
+            // Update statistics
+            document.getElementById('totalFollowingCount').textContent = following.size.toLocaleString();
+            document.getElementById('totalFollowersCount').textContent = followers.size.toLocaleString();
+            document.getElementById('mutualCount').textContent = mutualFollowers.length.toLocaleString();
 
-            // Populate "Not Following Back" list
-            notFollowingCount.textContent = `Total: ${notFollowingBack.length}`;
-            notFollowingBack.forEach(username => {
-                const li = document.createElement('li');
-                li.className = 'flex justify-between items-center bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm';
-                li.innerHTML = `
-                    <span class="font-medium">${username}</span>
-                    <a href="https://www.instagram.com/${username}/" target="_blank" rel="noopener noreferrer" class="text-sm text-purple-500 dark:text-purple-400 hover:underline">
-                        Visit Profile
-                    </a>
-                `;
-                notFollowingList.appendChild(li);
-            });
+            // Calculate ratios
+            const ratio = followers.size > 0 ? (following.size / followers.size * 100) : 0;
+            document.getElementById('followRatio').textContent = ratio.toFixed(0) + '%';
 
-            // Populate "You Don't Follow Back" list
-            notFollowedCount.textContent = `Total: ${notFollowedBack.length}`;
-            notFollowedBack.forEach(username => {
-                const li = document.createElement('li');
-                li.className = 'flex justify-between items-center bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm';
-                li.innerHTML = `
-                    <span class="font-medium">${username}</span>
-                    <a href="https://www.instagram.com/${username}/" target="_blank" rel="noopener noreferrer" class="text-sm text-purple-500 dark:text-purple-400 hover:underline">
-                        Visit Profile
-                    </a>
-                `;
-                notFollowedList.appendChild(li);
-            });
+            const engagementRate = following.size > 0 ? (mutualFollowers.length / following.size * 100) : 0;
+            document.getElementById('engagementRate').textContent = engagementRate.toFixed(1) + '%';
+            document.getElementById('engagementBar').style.width = engagementRate + '%';
 
-            // Show the results section
-            resultsSection.classList.remove('hidden');
+            const mutualRate = followers.size > 0 ? (mutualFollowers.length / followers.size * 100) : 0;
+            document.getElementById('mutualRate').textContent = mutualRate.toFixed(1) + '%';
+            document.getElementById('mutualBar').style.width = mutualRate + '%';
+
+            // Update badges
+            document.getElementById('notFollowingBadge').textContent = notFollowingBack.length;
+            document.getElementById('notFollowedBadge').textContent = youDontFollowBack.length;
+            document.getElementById('mutualBadge').textContent = mutualFollowers.length;
+
+            // Update timestamp
+            const timestamp = new Date(currentData.timestamp);
+            document.getElementById('lastUpdated').textContent = `Last updated: ${timestamp.toLocaleString()}`;
+
+            // Show sections
+            document.getElementById('statsSection').classList.remove('hidden');
+            document.getElementById('searchSection').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+            clearDataButton.classList.remove('hidden');
+
+            // Render current tab
+            renderCurrentTab();
         }
 
-        // Add event listener to the button
-        compareButton.addEventListener('click', compareLists);
+        // ===== Tab Switching =====
+        function switchTab(tabNumber) {
+            currentTab = tabNumber;
 
+            // Update tab buttons
+            for (let i = 1; i <= 3; i++) {
+                const tabBtn = document.getElementById(`tab${i}`);
+                const tabContent = document.getElementById(`tabContent${i}`);
+
+                if (i === tabNumber) {
+                    tabBtn.classList.add('bg-purple-100', 'dark:bg-purple-900', 'text-purple-700', 'dark:text-purple-300', 'border-b-2', 'border-purple-600');
+                    tabContent.classList.remove('hidden');
+                } else {
+                    tabBtn.classList.remove('bg-purple-100', 'dark:bg-purple-900', 'text-purple-700', 'dark:text-purple-300', 'border-b-2', 'border-purple-600');
+                    tabContent.classList.add('hidden');
+                }
+            }
+
+            renderCurrentTab();
+        }
+
+        // ===== Render Current Tab =====
+        function renderCurrentTab() {
+            let listData = [];
+            let listElement;
+
+            switch (currentTab) {
+                case 1:
+                    listData = [...currentData.notFollowingBack];
+                    listElement = document.getElementById('notFollowingList');
+                    break;
+                case 2:
+                    listData = [...currentData.youDontFollowBack];
+                    listElement = document.getElementById('notFollowedList');
+                    break;
+                case 3:
+                    listData = [...currentData.mutualFollowers];
+                    listElement = document.getElementById('mutualList');
+                    break;
+            }
+
+            // Filter by search
+            if (searchQuery) {
+                listData = listData.filter(username => username.toLowerCase().includes(searchQuery));
+            }
+
+            // Sort
+            if (sortOrder === 'alpha') {
+                listData.sort();
+            } else if (sortOrder === 'reverse') {
+                listData.sort().reverse();
+            }
+
+            // Render
+            listElement.innerHTML = '';
+
+            if (listData.length === 0) {
+                listElement.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-8">No results found</p>';
+                return;
+            }
+
+            listData.forEach(username => {
+                const li = document.createElement('div');
+                li.className = 'flex justify-between items-center bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm hover:shadow-md transition-all';
+                li.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="font-semibold text-gray-900 dark:text-gray-100">${username}</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="copyUsername('${username}')" class="text-xs bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-500" title="Copy username">
+                            📋
+                        </button>
+                        <a href="https://www.instagram.com/${username}/" target="_blank" rel="noopener noreferrer" class="text-xs bg-purple-500 text-white px-3 py-1 rounded hover:bg-purple-600" title="Visit profile">
+                            👤 Visit
+                        </a>
+                    </div>
+                `;
+                listElement.appendChild(li);
+            });
+        }
+
+        // ===== Copy Functions =====
+        function copyUsername(username) {
+            navigator.clipboard.writeText(username).then(() => {
+                showToast(`📋 Copied: ${username}`, 'success');
+            });
+        }
+
+        function copyList(tabNumber) {
+            let listData = [];
+
+            switch (tabNumber) {
+                case 1:
+                    listData = currentData.notFollowingBack;
+                    break;
+                case 2:
+                    listData = currentData.youDontFollowBack;
+                    break;
+                case 3:
+                    listData = currentData.mutualFollowers;
+                    break;
+            }
+
+            const text = listData.join('\n');
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`📋 Copied ${listData.length} usernames!`, 'success');
+            });
+        }
+
+        // ===== Export Functions =====
+        function exportData(format) {
+            const { notFollowingBack, youDontFollowBack, mutualFollowers, timestamp } = currentData;
+            const date = new Date(timestamp).toISOString().split('T')[0];
+
+            let content, filename, mimeType;
+
+            switch (format) {
+                case 'csv':
+                    content = 'Category,Username\n';
+                    notFollowingBack.forEach(u => content += `Not Following Back,${u}\n`);
+                    youDontFollowBack.forEach(u => content += `You Don't Follow,${u}\n`);
+                    mutualFollowers.forEach(u => content += `Mutual Followers,${u}\n`);
+                    filename = `instagram_analysis_${date}.csv`;
+                    mimeType = 'text/csv';
+                    break;
+
+                case 'json':
+                    content = JSON.stringify({
+                        timestamp,
+                        totalFollowing: currentData.following.size,
+                        totalFollowers: currentData.followers.size,
+                        notFollowingBack,
+                        youDontFollowBack,
+                        mutualFollowers
+                    }, null, 2);
+                    filename = `instagram_analysis_${date}.json`;
+                    mimeType = 'application/json';
+                    break;
+
+                case 'txt':
+                    content = `Instagram Analysis - ${date}\n\n`;
+                    content += `=== NOT FOLLOWING BACK (${notFollowingBack.length}) ===\n`;
+                    content += notFollowingBack.join('\n') + '\n\n';
+                    content += `=== YOU DON'T FOLLOW (${youDontFollowBack.length}) ===\n`;
+                    content += youDontFollowBack.join('\n') + '\n\n';
+                    content += `=== MUTUAL FOLLOWERS (${mutualFollowers.length}) ===\n`;
+                    content += mutualFollowers.join('\n');
+                    filename = `instagram_analysis_${date}.txt`;
+                    mimeType = 'text/plain';
+                    break;
+            }
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast(`📥 Exported to ${format.toUpperCase()}`, 'success');
+        }
+
+        // ===== Local Storage Functions =====
+        function saveData() {
+            const dataToSave = {
+                timestamp: currentData.timestamp,
+                following: Array.from(currentData.following),
+                followers: Array.from(currentData.followers),
+                notFollowingBack: currentData.notFollowingBack,
+                youDontFollowBack: currentData.youDontFollowBack,
+                mutualFollowers: currentData.mutualFollowers
+            };
+
+            localStorage.setItem('ig_compare_results', JSON.stringify(dataToSave));
+        }
+
+        function loadSavedData() {
+            const saved = localStorage.getItem('ig_compare_results');
+
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    currentData = {
+                        following: new Set(data.following),
+                        followers: new Set(data.followers),
+                        notFollowingBack: data.notFollowingBack,
+                        youDontFollowBack: data.youDontFollowBack,
+                        mutualFollowers: data.mutualFollowers,
+                        timestamp: data.timestamp
+                    };
+
+                    displayResults();
+                    showToast('📂 Loaded previous analysis', 'info');
+                } catch (e) {
+                    console.error('Failed to load saved data:', e);
+                }
+            }
+        }
+
+        function clearSavedData() {
+            if (confirm('Are you sure you want to clear all saved data?')) {
+                localStorage.removeItem('ig_compare_results');
+                hideAllSections();
+                clearDataButton.classList.add('hidden');
+
+                currentData = {
+                    following: new Set(),
+                    followers: new Set(),
+                    notFollowingBack: [],
+                    youDontFollowBack: [],
+                    mutualFollowers: [],
+                    timestamp: null
+                };
+
+                showToast('🗑️ Data cleared', 'success');
+            }
+        }
+
+        // ===== Utility Functions =====
+        function hideAllSections() {
+            document.getElementById('statsSection').classList.add('hidden');
+            document.getElementById('searchSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            const icons = {
+                success: '✅',
+                error: '❌',
+                info: 'ℹ️',
+                warning: '⚠️'
+            };
+
+            toastIcon.textContent = icons[type] || icons.success;
+            toastMessage.textContent = message;
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
     </script>
 
 </body>
-</html>
 
+</html>
